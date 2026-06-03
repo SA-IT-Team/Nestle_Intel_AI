@@ -1,0 +1,27 @@
+# Environment — never commit API keys
+backend/.env
+.env
+*.env
+
+# Python
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/.venv/
+backend/venv/
+__pycache__/
+
+# Node
+frontend/node_modules/
+node_modules/
+
+# Vite build output
+frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
