@@ -54,19 +54,9 @@ def force_plain_text(text: str) -> str:
 
 app = FastAPI(title="Nestle Research API")
 
-# Accept localhost for dev + any Vercel deployment URL for prod
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:4173",
-]
-frontend_url = os.getenv("FRONTEND_URL")
-if frontend_url:
-    ALLOWED_ORIGINS.append(frontend_url)
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
