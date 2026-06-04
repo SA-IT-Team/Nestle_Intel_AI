@@ -63,6 +63,35 @@ app.add_middleware(
 
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
+# ── Demo MCP Connectors — simulated external data source connections ──────────
+STAGE_CONNECTORS = {
+    "market": [
+        {"name": "Euromonitor", "dataset": "Protein Beverages Global Market Report 2024", "type": "Market Intelligence"},
+        {"name": "Statista",    "dataset": "India Health & Wellness Consumer Trends Q4 2024", "type": "Consumer Data"},
+        {"name": "IBEF",        "dataset": "India Food & Beverage Sector Overview 2024", "type": "Industry Report"},
+    ],
+    "competitor": [
+        {"name": "Nielsen IQ",  "dataset": "India Retail Tracking — Protein Category Q3 2024", "type": "Retail Intelligence"},
+        {"name": "Mintel",      "dataset": "Protein Coffee & Functional Beverages Report 2024", "type": "Category Intelligence"},
+        {"name": "Crunchbase",  "dataset": "D2C Protein Brand Funding & Valuation Data 2024", "type": "Investment Data"},
+    ],
+    "consumer": [
+        {"name": "Kantar",      "dataset": "India Urban Consumer Segmentation Study 2024", "type": "Consumer Panel"},
+        {"name": "YouGov",      "dataset": "India Health & Fitness Attitude Survey 2024", "type": "Survey Data"},
+        {"name": "Brandwatch",  "dataset": "Protein Coffee Social Listening Analysis", "type": "Social Intelligence"},
+    ],
+    "survey": [
+        {"name": "Nielsen IQ",  "dataset": "FMCG Concept Testing Norms India 2024", "type": "Benchmark Data"},
+        {"name": "Kantar",      "dataset": "Purchase Intent Benchmarks — New FMCG Categories", "type": "Survey Norms"},
+        {"name": "EY-Parthenon","dataset": "India Protein Supplement Consumer Study 2024", "type": "Consulting Report"},
+    ],
+    "synthesis": [
+        {"name": "McKinsey",        "dataset": "India FMCG Growth Opportunity Matrix 2024", "type": "Strategy Report"},
+        {"name": "Bain & Company",  "dataset": "India Consumer Market Entry Playbook", "type": "Strategy Report"},
+        {"name": "Euromonitor",     "dataset": "Competitive Landscape — Protein Coffee India", "type": "Market Intelligence"},
+    ],
+}
+
 # ── Prompt each agent to end with a plain-English insight sentence ────────────
 STAGE_PROMPTS = {
     "market": """You are a market research analyst. Analyze the protein coffee market opportunity for this product concept:
@@ -176,14 +205,22 @@ async def stream_stage(stage: str, query: str, context: dict):
     logs = [
         f"[{label}] Initializing agent...",
         f"[{label}] Analyzing product concept...",
-        f"[{label}] Querying knowledge base...",
-        f"[{label}] Processing data signals...",
-        f"[{label}] Structuring findings...",
     ]
-
     for log in logs:
         yield f"data: {json.dumps({'type': 'log', 'message': log})}\n\n"
         await asyncio.sleep(0.2)
+
+    # ── Emit MCP connector activity ───────────────────────────────────────────
+    connectors = STAGE_CONNECTORS.get(stage, [])
+    for connector in connectors:
+        yield f"data: {json.dumps({'type': 'connector', 'data': connector})}\n\n"
+        conn_name = connector["name"]
+        conn_dataset = connector["dataset"]
+        yield f"data: {json.dumps({'type': 'log', 'message': f'[MCP] Connecting to {conn_name} - {conn_dataset}'})}\n\n"
+        await asyncio.sleep(0.35)
+
+    yield f"data: {json.dumps({'type': 'log', 'message': f'[{label}] All data sources connected. Running analysis...'})}\n\n"
+    await asyncio.sleep(0.2)
 
     full_text = ""
     with client.messages.stream(
@@ -263,7 +300,7 @@ async def stream_stage(stage: str, query: str, context: dict):
     # Hard-clean whatever Haiku returns
     insight = force_plain_text(raw_insight)
 
-    result = {"raw": full_text, "insight": insight}
+    result = {"raw": full_text, "insight": insight, "connectors": connectors}
     yield f"data: {json.dumps({'type': 'result', 'data': result})}\n\n"
     yield f"data: {json.dumps({'type': 'done'})}\n\n"
 

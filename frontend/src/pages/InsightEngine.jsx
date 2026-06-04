@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Lightbulb, Loader2, ChevronRight, Target, TrendingUp, Users, BarChart2, RefreshCw, Sparkles, Download, CheckCircle2 } from 'lucide-react'
 import { API } from '../utils/api'
 import { generatePDF } from '../utils/generatePDF'
+import SourcesPanel from '../components/SourcesPanel'
+import DemoModeBanner from '../components/DemoModeBanner'
 
 const DASHBOARD_CARDS = [
   { id: 'market',    title: 'Market Opportunity', icon: TrendingUp, color: '#2563eb', summary: '$2.9B global · India 48% YoY · Score 8.7/10',         stats: ['Global TAM: $2.9B', 'India SAM: $420M', 'CAGR: 48%'] },
@@ -30,7 +32,7 @@ Nestlé enters with 3 structural advantages no competitor can replicate: (1) NES
 NESCAFÉ Protein+ Instant Coffee Sachet — 15g protein, ₹35 MRP. Metro launch Q3, national rollout Q1 next year. Expected Year-1 revenue: ₹85–120 Crore at 3% India market share with break-even at Month 14.
 
 **Time-to-Market Advantage**
-The window is 12–18 months before a well-funded D2C brand achieves scale. This research took 4 minutes. Act before your competitors spend 4 years reaching the same conclusion.`
+The window is 12–18 months before a well-funded D2C brand achieves scale. Save hundreds of hours of manual research with a fully synthesised market overview. Act before your competitors reach the same conclusion.`
 
 export default function InsightEngine({ researchData, onNavigate, productQuery }) {
   const [loading, setLoading] = useState(false)
@@ -110,6 +112,7 @@ export default function InsightEngine({ researchData, onNavigate, productQuery }
       </div>
 
       <div className="p-8 space-y-5">
+        <DemoModeBanner />
         {/* Dashboard Input Cards */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-[#8b7355] mb-3">Research Inputs</p>
@@ -230,6 +233,8 @@ export default function InsightEngine({ researchData, onNavigate, productQuery }
             <p className="text-xs text-[#c4a882] mt-1">Or click <strong>Preview Demo</strong> for a sample output</p>
           </div>
         )}
+
+        <SourcesPanel stage="insight" connectors={researchData?.synthesis?.connectors || []} />
       </div>
     </div>
   )

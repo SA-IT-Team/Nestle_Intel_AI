@@ -8,7 +8,7 @@ const SUGGESTIONS = [
 ]
 
 const STATS = [
-  { label: 'Research Time Saved', value: '4 Years → 4 Min', icon: Clock },
+  { label: 'Manual Research Replaced', value: 'Weeks → Hours', icon: Clock },
   { label: 'AI Agents Deployed', value: '5 Parallel Agents', icon: Zap },
   { label: 'Insights Generated', value: 'Market + Competitor + Survey', icon: CheckCircle2 },
 ]
@@ -45,12 +45,12 @@ export default function CommandCenter({ onNavigate, setProductQuery, productQuer
             Multi-Agent Consumer Research Platform
           </div>
           <h2 className="text-4xl font-black text-[#1a1209] mb-3 leading-tight">
-            From Brief to Market Intelligence<br />
-            <span style={{ color: '#63513d' }}>in Under 4 Minutes.</span>
+            From Brief to Synthesised<br />
+            <span style={{ color: '#63513d' }}>Market Intelligence — Automatically.</span>
           </h2>
           <p className="text-[#6b5b4e] text-base leading-relaxed">
-            Your current research vendor takes <span className="font-bold text-red-600">4 years</span> and costs millions.<br />
-            Our AI pipeline delivers the same depth in <span className="font-bold" style={{ color: '#63513d' }}>minutes</span> — market sizing, competitor mapping, consumer surveys, and a unified executive brief.
+            What takes your research team <span className="font-bold text-red-600">weeks of manual searching</span>, our AI agents synthesise overnight — at scale.<br />
+            Market sizing, competitor mapping, consumer surveys, and a unified executive brief, all in one place.
           </p>
         </div>
 
@@ -133,7 +133,7 @@ export default function CommandCenter({ onNavigate, setProductQuery, productQuer
             </div>
           ))}
         </div>
-        <p className="text-xs text-[#c4a882] mt-2">5-stage parallel agentic pipeline · Powered by Claude AI</p>
+        <p className="text-xs text-[#c4a882] mt-2">5-stage parallel agentic pipeline · Powered by Claude AI · Save hundreds of hours of manual research</p>
       </div>
     </div>
   )

@@ -1,5 +1,7 @@
 import { ClipboardList, ThumbsUp, Package, DollarSign } from 'lucide-react'
 import { cleanMarkdown } from '../utils/cleanMarkdown'
+import DemoModeBanner from '../components/DemoModeBanner'
+import SourcesPanel from '../components/SourcesPanel'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
 const SURVEY_QUESTIONS = [
@@ -52,6 +54,7 @@ function HBar({ data, color }) {
 }
 
 export default function SurveyDashboard({ researchData }) {
+  const connectors = researchData?.survey?.connectors || []
   const totalBuy = INTENT_DATA.slice(0, 2).reduce((a, b) => a + b.value, 0)
   const aiInsight = cleanMarkdown(researchData?.survey?.insight || "73% of respondents show purchase intent. The dominant preference is instant sachets (43%) at ₹30–50 price point — perfectly aligned with Nestlé's existing NESCAFÉ distribution model. Gym/health channels are under-indexed (12%) vs online (29%), signaling a hybrid GTM opportunity.")
 
@@ -69,6 +72,7 @@ export default function SurveyDashboard({ researchData }) {
       </div>
 
       <div className="p-8 space-y-5">
+        <DemoModeBanner />
         {/* Survey Questions */}
         <div className="bg-white border rounded-2xl p-5 shadow-sm" style={{ borderColor: '#ddd0c0' }}>
           <div className="flex items-center gap-2 mb-4">
@@ -142,6 +146,7 @@ export default function SurveyDashboard({ researchData }) {
           ))}
         </div>
 
+        <SourcesPanel stage="survey" connectors={connectors} />
       </div>
     </div>
   )

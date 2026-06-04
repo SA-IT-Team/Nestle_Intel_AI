@@ -1,5 +1,7 @@
 import { TrendingUp, DollarSign, Users, Target, Star } from 'lucide-react'
 import { cleanMarkdown } from '../utils/cleanMarkdown'
+import DemoModeBanner from '../components/DemoModeBanner'
+import SourcesPanel from '../components/SourcesPanel'
 import {
   AreaChart, Area, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
@@ -48,6 +50,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 }
 
 export default function MarketDashboard({ researchData }) {
+  const connectors = researchData?.market?.connectors || []
   const aiInsight = cleanMarkdown(researchData?.market?.insight || "The protein coffee market in India is experiencing explosive 48% YoY growth, driven by rising fitness culture and the $2.9B global tailwind. Nestlé's strong distribution network gives it an unparalleled advantage to capture 10%+ market share within 3 years.")
 
   return (
@@ -58,6 +61,7 @@ export default function MarketDashboard({ researchData }) {
       </div>
 
       <div className="p-8 space-y-5">
+        <DemoModeBanner />
         {/* Stat Cards */}
         <div className="grid grid-cols-4 gap-4">
           {STAT_CARDS.map(({ label, value, sub, icon: Icon, accent }) => (
@@ -145,6 +149,8 @@ export default function MarketDashboard({ researchData }) {
             </div>
           </div>
         </div>
+
+        <SourcesPanel stage="market" connectors={connectors} />
       </div>
     </div>
   )

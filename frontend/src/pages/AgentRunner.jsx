@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   TrendingUp, Users, MessageSquare, ClipboardList, Sparkles,
-  CheckCircle2, Loader2, Circle, ArrowRight, ChevronDown, ChevronUp, Zap
+  CheckCircle2, Loader2, ArrowRight, ChevronDown, ChevronUp, Zap, Database
 } from 'lucide-react'
 import { API } from '../utils/api'
 
@@ -67,7 +67,7 @@ function StatusBadge({ status, color }) {
 
 function AgentCard({ stage, data = {}, wide = false }) {
   const { label, subLabel, icon: Icon, desc, color, bg, border } = stage
-  const { status = 'pending', log = [] } = data
+  const { status = 'pending', log = [], connectors = [] } = data
   const isRunning = status === 'running'
   const isDone    = status === 'done'
   const [expanded, setExpanded] = useState(false)
@@ -126,6 +126,26 @@ function AgentCard({ stage, data = {}, wide = false }) {
       <div className="px-4 py-2.5 border-t" style={{ borderColor: '#f0e8de' }}>
         <p className="text-xs leading-relaxed text-[#6b5b4e]">{desc}</p>
       </div>
+
+      {/* MCP Connector badges */}
+      {(isRunning || isDone) && connectors.length > 0 && (
+        <div className="px-4 pb-3 border-t pt-2.5" style={{ borderColor: '#f0e8de' }}>
+          <p className="text-xs font-semibold text-[#8b7355] mb-1.5 flex items-center gap-1.5">
+            <Database size={10} style={{ color }} /> Connected Data Sources
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {connectors.map((c, i) => (
+              <span
+                key={i}
+                className="text-xs px-2 py-0.5 rounded-full font-medium border"
+                style={{ backgroundColor: color + '10', borderColor: color + '30', color }}
+              >
+                {c.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Log toggle */}
       {(isRunning || (isDone && log.length > 0)) && (
@@ -227,7 +247,16 @@ export default function AgentRunner({ onNavigate, productQuery, researchData, se
       for (const line of lines) {
         try {
           const data = JSON.parse(line.slice(6))
-          if (data.type === 'log')    appendLog(stageId, data.message)
+          if (data.type === 'log') appendLog(stageId, data.message)
+          if (data.type === 'connector') {
+            setStagesData(prev => ({
+              ...prev,
+              [stageId]: {
+                ...prev[stageId],
+                connectors: [...(prev[stageId]?.connectors || []), data.data],
+              },
+            }))
+          }
           if (data.type === 'result') result = data.data
         } catch (_) {}
       }
@@ -354,7 +383,7 @@ export default function AgentRunner({ onNavigate, productQuery, researchData, se
             </div>
             <h3 className="text-lg font-bold text-[#1a1209] mb-1">Ready to Launch</h3>
             <p className="text-sm text-[#8b7355] mb-2">4 research agents run in parallel · synthesis follows automatically</p>
-            <p className="text-xs text-[#c4a882] mb-6">~3–4 minutes total vs 4 years with traditional research</p>
+            <p className="text-xs text-[#c4a882] mb-6">Save hundreds of hours of manual research — agents synthesise in the background</p>
             <button
               onClick={runPipeline}
               disabled={!productQuery}

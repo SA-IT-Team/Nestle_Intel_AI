@@ -1,4 +1,4 @@
-import { LayoutDashboard, Bot, TrendingUp, Users, ClipboardList, Lightbulb, Lock } from 'lucide-react'
+import { LayoutDashboard, Bot, TrendingUp, Users, ClipboardList, Lightbulb, Lock, FlaskConical } from 'lucide-react'
 import nestleLogo from '../assets/Nestle-Logo.png'
 
 const NAV = [
@@ -43,6 +43,13 @@ export default function Sidebar({ activeScreen, onNavigate, researchData }) {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Demo Mode Badge */}
+      <div className="mx-3 mt-3 flex items-center gap-2 rounded-lg px-3 py-2" style={{ backgroundColor: '#fffbeb', border: '1px solid #fde68a' }}>
+        <FlaskConical size={12} className="text-amber-500 shrink-0" />
+        <span className="text-xs font-semibold text-amber-700">Demo Mode</span>
+        <span className="text-xs text-amber-600 leading-tight">· AI Synthesised Data</span>
       </div>
 
       {/* Nav */}

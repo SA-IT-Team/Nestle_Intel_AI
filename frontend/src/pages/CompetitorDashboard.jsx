@@ -1,5 +1,7 @@
 import { Users, AlertTriangle } from 'lucide-react'
 import { cleanMarkdown } from '../utils/cleanMarkdown'
+import DemoModeBanner from '../components/DemoModeBanner'
+import SourcesPanel from '../components/SourcesPanel'
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Legend
@@ -44,6 +46,7 @@ const severityStyle = {
 }
 
 export default function CompetitorDashboard({ researchData }) {
+  const connectors = researchData?.competitor?.connectors || []
   const aiInsight = cleanMarkdown(researchData?.competitor?.insight || "The protein coffee space has 12+ global players but zero credible FMCG competitors in India's sachet/instant segment. Slate Milk dominates on protein (20g) but is priced out of India ($4.5/serving). MuscleBlaze is the closest India threat but lacks coffee heritage. Nestlé has a decisive moat: NESCAFÉ brand + pan-India distribution + existing coffee infrastructure.")
 
   return (
@@ -54,6 +57,7 @@ export default function CompetitorDashboard({ researchData }) {
       </div>
 
       <div className="p-8 space-y-5">
+        <DemoModeBanner />
         {/* Competitor Table */}
         <div className="bg-white border rounded-2xl overflow-hidden shadow-sm" style={{ borderColor: '#ddd0c0' }}>
           <div className="px-5 py-4 border-b flex items-center gap-2" style={{ borderColor: '#ede0d0', backgroundColor: '#faf8f5' }}>
@@ -180,6 +184,7 @@ export default function CompetitorDashboard({ researchData }) {
           </div>
         </div>
 
+        <SourcesPanel stage="competitor" connectors={connectors} />
       </div>
     </div>
   )
